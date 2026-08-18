@@ -122,6 +122,26 @@ overrides:
   'sharp': '>=0.35.0'
   'websocket-driver': '>=0.7.5'
 
+  # Security: pin transitive deps flagged HIGH by pnpm audit. All advisories are
+  # denial-of-service (loop / stack-exhaustion) in build or tooling dependencies,
+  # not application runtime paths.
+  #
+  # Scoped by major where several copies coexist, matching the convention above:
+  # nanoid@3.3.16 is the vulnerable transitive copy (vite -> postcss); the direct
+  # nanoid@5 dependency is unaffected and must not be forced onto the v3 range.
+  # Ranges are caret-bounded on purpose: an unbounded '>=3.3.18' resolves to the
+  # highest matching version overall (nanoid 5.x), which is ESM-only and breaks the
+  # v3 API that postcss expects.
+  'nanoid@3': '^3.3.18'
+  'deepmerge-ts': '^8.0.0'
+  #
+  # NOT pinned: image-size (2 advisories, DoS in the ICNS/JXL/HEIF parsers).
+  # No fixed release exists - 2.0.2 is the latest ever published, so ">=2.0.3"
+  # cannot resolve. Accepted risk: it is a build-time dependency of the `docs`
+  # Docusaurus site only, and the application/worker images install with
+  # `--filter testplanit` (Dockerfile:34,81), so it never ships in a runtime
+  # image. Revisit if upstream publishes a patched version.
+
 patchedDependencies:
   gray-matter@4.0.3: patches/gray-matter@4.0.3.patch
   read-yaml-file@1.1.0: patches/read-yaml-file@1.1.0.patch
