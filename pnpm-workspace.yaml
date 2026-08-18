@@ -8,6 +8,17 @@ packages:
 # Supply-chain cooling-off disabled; pre-merge CI is the supply-chain gate.
 minimumReleaseAge: 0
 
+# Network resilience for installs on constrained links. The Docker image build
+# fetches ~2200 packages across two parallel stages (base + deps); on a slow
+# connection a single stalled tarball exhausts the default 2 retries and aborts
+# the whole install with "TypeError: fetch failed". Lower concurrency is counter-
+# intuitively faster there: 16 parallel sockets starve each other and time out.
+fetchRetries: 10
+fetchRetryMintimeout: 20000
+fetchRetryMaxtimeout: 180000
+fetchTimeout: 600000
+networkConcurrency: 5
+
 # Packages permitted to run install/build lifecycle scripts. pnpm 11 replaces
 # package.json#pnpm.onlyBuiltDependencies with this allowBuilds map.
 allowBuilds:
