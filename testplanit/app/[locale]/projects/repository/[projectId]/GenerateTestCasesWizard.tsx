@@ -109,6 +109,7 @@ import {
   ensureTipTapJSON,
   serializeTipTapJSON,
 } from "~/utils/tiptapConversion";
+import DOMPurify from "dompurify";
 import { generateHTMLFallback } from "~/utils/tiptapToHtml";
 import { sanitizeName } from "~/utils";
 import type { LinkedIssueRef } from "~/lib/integrations/adapters/IssueAdapter";
@@ -5471,7 +5472,7 @@ function IssueDescriptionText({ description }: { description: string }) {
     return (
       <div
         className="prose prose-sm dark:prose-invert max-w-none text-foreground [&_*]:!text-inherit"
-        dangerouslySetInnerHTML={{ __html: htmlOutput }}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(htmlOutput) }}
       />
     );
   };

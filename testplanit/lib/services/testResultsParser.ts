@@ -10,7 +10,7 @@ import { randomUUID } from "crypto";
 import { existsSync, writeFileSync } from "fs";
 import { mkdir, rm } from "fs/promises";
 import { tmpdir } from "os";
-import { join } from "path";
+import { basename, join } from "path";
 import type { ITestCase, ITestResult, ITestSuite } from "test-results-parser";
 
 // Import parseV2 dynamically to avoid Turbopack bundling issues
@@ -299,7 +299,7 @@ export async function parseTestResults(
     for (const file of files) {
       const content = await file.text();
       // Ensure proper file extension for the format
-      let fileName = file.name;
+      let fileName = basename((file.name || "").replace(/\\/g, "/")) || "upload";
       if (format === "cucumber" || format === "mocha") {
         // JSON-based formats need .json extension for require() to work
         if (!fileName.endsWith(".json")) {

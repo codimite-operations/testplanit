@@ -64,6 +64,7 @@ import {
   type ParsedMarkdownCase,
 } from "~/utils/markdownTestCaseParser";
 import { ensureTipTapJSON } from "~/utils/tiptapConversion";
+import DOMPurify from "dompurify";
 import { generateHTMLFallback } from "~/utils/tiptapToHtml";
 
 interface ImportCasesWizardProps {
@@ -1544,7 +1545,7 @@ export function ImportCasesWizard({
       return (
         <div
           className="prose prose-sm dark:prose-invert max-w-none text-sm"
-          dangerouslySetInnerHTML={{ __html: htmlOutput }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(htmlOutput) }}
         />
       );
     }
