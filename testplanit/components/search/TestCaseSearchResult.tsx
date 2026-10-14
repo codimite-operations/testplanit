@@ -1,4 +1,5 @@
-import { Bot, ListChecks, Trash2 } from "lucide-react";
+import DOMPurify from "dompurify";
+import { Bot,ListChecks, Trash2 } from "lucide-react";
 import { isAutomatedCaseSource } from "~/utils/testResultTypes";
 
 interface TestCaseSearchResultProps {
@@ -33,7 +34,11 @@ export function TestCaseSearchResult({
     <span className="flex items-center gap-1">
       {icon}
       {highlight ? (
-        <span dangerouslySetInnerHTML={{ __html: highlight }} />
+        <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(highlight, {
+              ALLOWED_TAGS: ["em", "mark", "b", "strong"],
+              ALLOWED_ATTR: [],
+            }),
+          }} />
       ) : (
         testCase.name || `Case ${testCase.id || "Unknown"}`
       )}

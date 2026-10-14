@@ -1,6 +1,7 @@
 import { DateFormatter } from "@/components/DateFormatter";
 import { DurationDisplay } from "@/components/DurationDisplay";
 import { Badge } from "@/components/ui/badge";
+import DOMPurify from "dompurify";
 import { Tag } from "lucide-react";
 import React from "react";
 import { cn } from "~/utils";
@@ -199,7 +200,10 @@ export function SearchHighlight({
       <p
         className="line-clamp-2"
         dangerouslySetInnerHTML={{
-          __html: highlights[field][0],
+          __html: DOMPurify.sanitize(highlights[field][0], {
+            ALLOWED_TAGS: ["em", "mark", "b", "strong"],
+            ALLOWED_ATTR: [],
+          }),
         }}
       />
     </div>
